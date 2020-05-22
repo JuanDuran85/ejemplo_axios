@@ -1,9 +1,13 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
+    <img alt="Vue logo" :src="imagen">
     <h1>pokemon</h1>
     <input type="text" v-model="nombre">
     <button @click="pokebusca">Buscar</button>
+    <hr>
+    <div v-for="(item, index) in imagenes" :key="index">
+      <img :src="item" :alt="index">
+    </div>
     <hr>
     <ul>
       <li v-for="(item, index) in habilidad" :key="index">{{item.ability.name}}</li>
@@ -19,7 +23,10 @@ export default {
   data() {
     return {
       nombre: 'pikachu',
-      habilidad: null
+      habilidad: null,
+      imagenes: null,
+      imagen: require("./assets/logo.png"),
+      url: 'https://www.digital55.com/wp-content/uploads/2019/09/%C2%BFQue%CC%81-debe-tener-un-profesional-especialista-en-Vue.png'
     }
   },
   methods: {
@@ -27,9 +34,9 @@ export default {
       if (this.nombre) {
         axios.get(`https://pokeapi.co/api/v2/pokemon/${this.nombre}`)
         .then(response => {
-          console.info(response.data.abilities[0]);
+          console.info(response.data.sprites);
+          this.imagenes = response.data.sprites;
           this.habilidad = response.data.abilities;
-
         })
         .catch(error => {
           console.log(error)
